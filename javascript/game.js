@@ -56,13 +56,14 @@ exports.Game = function() {
   };
 
   this.add = function(playerName){
+    var noPlayers;
     players.push(playerName);
-    places[this.howManyPlayers() - 1] = 0;
-    purses[this.howManyPlayers() - 1] = 0;
-    inPenaltyBox[this.howManyPlayers() - 1] = false;
+    noPlayers = this.howManyPlayers();
+    places[noPlayers - 1] = purses[noPlayers - 1] = 0;
+    inPenaltyBox[noPlayers - 1] = false;
 
     console.log(playerName + " was added");
-    console.log("They are player number " + players.length);
+    console.log("They are player number " + noPlayers);
 
     return true;
   };
