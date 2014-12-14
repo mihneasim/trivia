@@ -17,27 +17,23 @@ exports.Game = function() {
   var didPlayerWin = function(){
     return !(purses[currentPlayer] == 6)
   };
+  var categories = {
+    'Pop': [0, 4, 8],
+    'Science': [1, 5, 9],
+    'Sports': [2, 6, 10],
+    'Rock': []
+  };
+  var defaultCategory = 'Rock';
 
   var currentCategory = function(){
-    if(places[currentPlayer] == 0)
-      return 'Pop';
-    if(places[currentPlayer] == 4)
-      return 'Pop';
-    if(places[currentPlayer] == 8)
-      return 'Pop';
-    if(places[currentPlayer] == 1)
-      return 'Science';
-    if(places[currentPlayer] == 5)
-      return 'Science';
-    if(places[currentPlayer] == 9)
-      return 'Science';
-    if(places[currentPlayer] == 2)
-      return 'Sports';
-    if(places[currentPlayer] == 6)
-      return 'Sports';
-    if(places[currentPlayer] == 10)
-      return 'Sports';
-    return 'Rock';
+    for (var item in categories) {
+      if (categories.hasOwnProperty(item)) {
+	if (categories[item].indexOf(places[currentPlayer]) !== -1) {
+	  return item;
+	}
+      }
+    }
+    return defaultCategory;
   };
 
   this.createRockQuestion = function(index){
