@@ -1,5 +1,23 @@
 exports = typeof window !== "undefined" && window !== null ? window : global;
 
+exports.Category = function(name, whenToPick) {
+  var questions = [];
+  this.name = name;
+  this.whenToPick = whenToPick;
+
+  this.addQuestion = function addQuestion (question) {
+    questions.push(question);
+  }
+
+  this.consumeQuestion = function consumeQuestion () {
+    return questions.shift();
+  }
+
+  this.isPicked = function (pickIndex) {
+    return this.whenToPick.indexOf(pickIndex) !== -1;
+  }
+}
+
 exports.Game = function() {
   var players          = new Array();
   var places           = new Array(6);
@@ -17,21 +35,18 @@ exports.Game = function() {
   var didPlayerWin = function(){
     return !(purses[currentPlayer] == 6)
   };
-  var categories = {
-    'Pop': {pick: [0, 4, 8], questions: []},
-    'Science': {pick: [1, 5, 9], questions: []},
-    'Sports': {pick: [2, 6, 10], questions: []},
-    'Rock': {pick: [], questions: []}
-  };
-  var defaultCategory = 'Rock';
+  var categories = [
+    new Category('Pop', [0, 4, 8]),
+    new Category('Science', [1, 5, 9]),
+    new Category('Sports', [2, 6, 10]),
+    new Category('Rock', [])];
+
+  var defaultCategory = categories[categories.length - 1];
 
   var currentCategory = function(){
-    for (var item in categories) {
-      if (categories.hasOwnProperty(item)) {
-	if (categories[item].pick.indexOf(places[currentPlayer]) !== -1) {
-	  return item;
-	}
-      }
+    for (var ind=0; ind < categories.length; ind++) {
+      if (categories[ind].isPicked(places[currentPlayer]))
+	  return categories[ind];
     }
     return defaultCategory;
   };
@@ -41,13 +56,11 @@ exports.Game = function() {
   };
 
   for(var i = 0; i < 50; i++){
-    for (var item in categories) {
-      if (categories.hasOwnProperty(item)) {
-	if (item !== 'Rock')
-	  categories[item].questions.push(item + " Question " + i);
+    for (var ind=0; ind < categories.length; ind++) {
+	if (categories[ind].name !== 'Rock')
+	  categories[ind].addQuestion(categories[ind].name + " Question " + i);
 	else
-	  categories['Rock'].questions.push(this.createRockQuestion(i));
-      }
+	  categories[ind].addQuestion(this.createRockQuestion(i));
     }
   };
 
@@ -74,7 +87,7 @@ exports.Game = function() {
 
 
   var askQuestion = function(){
-    console.log(categories[currentCategory()].questions.shift());
+    console.log(currentCategory().consumeQuestion());
   };
 
   this.roll = function(roll){
@@ -92,7 +105,7 @@ exports.Game = function() {
         }
 
         console.log(players[currentPlayer] + "'s new location is " + places[currentPlayer]);
-        console.log("The category is " + currentCategory());
+        console.log("The category is " + currentCategory().name);
         askQuestion();
       }else{
         console.log(players[currentPlayer] + " is not getting out of the penalty box");
@@ -106,7 +119,7 @@ exports.Game = function() {
       }
 
       console.log(players[currentPlayer] + "'s new location is " + places[currentPlayer]);
-      console.log("The category is " + currentCategory());
+      console.log("The category is " + currentCategory().name);
       askQuestion();
     }
   };
