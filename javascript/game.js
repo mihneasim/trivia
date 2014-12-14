@@ -18,17 +18,17 @@ exports.Game = function() {
     return !(purses[currentPlayer] == 6)
   };
   var categories = {
-    'Pop': [0, 4, 8],
-    'Science': [1, 5, 9],
-    'Sports': [2, 6, 10],
-    'Rock': []
+    'Pop': {pick: [0, 4, 8], questions: []},
+    'Science': {pick: [1, 5, 9], questions: []},
+    'Sports': {pick: [2, 6, 10], questions: []},
+    'Rock': {pick: [], questions: []}
   };
   var defaultCategory = 'Rock';
 
   var currentCategory = function(){
     for (var item in categories) {
       if (categories.hasOwnProperty(item)) {
-	if (categories[item].indexOf(places[currentPlayer]) !== -1) {
+	if (categories[item].pick.indexOf(places[currentPlayer]) !== -1) {
 	  return item;
 	}
       }
@@ -41,10 +41,14 @@ exports.Game = function() {
   };
 
   for(var i = 0; i < 50; i++){
-    popQuestions.push("Pop Question "+i);
-    scienceQuestions.push("Science Question "+i);
-    sportsQuestions.push("Sports Question "+i);
-    rockQuestions.push(this.createRockQuestion(i));
+    for (var item in categories) {
+      if (categories.hasOwnProperty(item)) {
+	if (item !== 'Rock')
+	  categories[item].questions.push(item + " Question " + i);
+	else
+	  categories['Rock'].questions.push(this.createRockQuestion(i));
+      }
+    }
   };
 
   this.isPlayable = function() {
@@ -70,14 +74,7 @@ exports.Game = function() {
 
 
   var askQuestion = function(){
-    if(currentCategory() == 'Pop')
-      console.log(popQuestions.shift());
-    if(currentCategory() == 'Science')
-      console.log(scienceQuestions.shift());
-    if(currentCategory() == 'Sports')
-      console.log(sportsQuestions.shift());
-    if(currentCategory() == 'Rock')
-      console.log(rockQuestions.shift());
+    console.log(categories[currentCategory()].questions.shift());
   };
 
   this.roll = function(roll){
