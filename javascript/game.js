@@ -124,35 +124,34 @@ exports.Game = function() {
           currentPlayer = 0;
   };
 
+  var answerWasCorrect = function () {
+      console.log("Answer was correct!!!!");
+      purses[currentPlayer] += 1;
+      console.log(players[currentPlayer] + " now has " +
+                  purses[currentPlayer]  + " Gold Coins.");
+  };
+
   this.wasCorrectlyAnswered = function(){
+    var winner;
+
     if(inPenaltyBox[currentPlayer]){
       if(isGettingOutOfPenaltyBox){
-        console.log('Answer was correct!!!!');
-        purses[currentPlayer] += 1;
-        console.log(players[currentPlayer] + " now has " +
-                    purses[currentPlayer]  + " Gold Coins.");
 
-        var winner = didPlayerWin();
+	answerWasCorrect();
+        winner = didPlayerWin();
 	nextPlayerTurn();
 
         return winner;
       }else{
+
 	nextPlayerTurn();
         return true;
       }
 
-
-
     }else{
 
-      console.log("Answer was correct!!!!");
-
-      purses[currentPlayer] += 1;
-      console.log(players[currentPlayer] + " now has " +
-                  purses[currentPlayer]  + " Gold Coins.");
-
-      var winner = didPlayerWin();
-
+      answerWasCorrect();
+      winner = didPlayerWin();
       nextPlayerTurn();
 
       return winner;
