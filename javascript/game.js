@@ -118,6 +118,12 @@ exports.Game = function() {
     }
   };
 
+  var nextPlayerTurn = function() {
+        currentPlayer += 1;
+        if(currentPlayer == players.length)
+          currentPlayer = 0;
+  };
+
   this.wasCorrectlyAnswered = function(){
     if(inPenaltyBox[currentPlayer]){
       if(isGettingOutOfPenaltyBox){
@@ -127,15 +133,11 @@ exports.Game = function() {
                     purses[currentPlayer]  + " Gold Coins.");
 
         var winner = didPlayerWin();
-        currentPlayer += 1;
-        if(currentPlayer == players.length)
-          currentPlayer = 0;
+	nextPlayerTurn();
 
         return winner;
       }else{
-        currentPlayer += 1;
-        if(currentPlayer == players.length)
-          currentPlayer = 0;
+	nextPlayerTurn();
         return true;
       }
 
@@ -151,9 +153,7 @@ exports.Game = function() {
 
       var winner = didPlayerWin();
 
-      currentPlayer += 1;
-      if(currentPlayer == players.length)
-        currentPlayer = 0;
+      nextPlayerTurn();
 
       return winner;
     }
@@ -164,9 +164,7 @@ exports.Game = function() {
 		console.log(players[currentPlayer] + " was sent to the penalty box");
 		inPenaltyBox[currentPlayer] = true;
 
-    currentPlayer += 1;
-    if(currentPlayer == players.length)
-      currentPlayer = 0;
+		nextPlayerTurn();
 		return true;
   };
 };
