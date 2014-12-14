@@ -51,8 +51,8 @@ exports.Game = function() {
     rockQuestions.push(this.createRockQuestion(i));
   };
 
-  this.isPlayable = function(howManyPlayers){
-    return howManyPlayers >= 2;
+  this.isPlayable = function() {
+    return this.howManyPlayers() >= 2;
   };
 
   this.add = function(playerName){
